@@ -1,0 +1,20 @@
+# Results of new runs (reference results live in data/)
+outputs/
+
+# MATLAB autosave / editor / build artefacts
+*.asv
+*.m~
+*.autosave
+*.mex*
+slprj/
+codegen/
+*.slxc
+
+# Third-party toolboxes (install separately, see README)
+third_party/
+spams-matlab*/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
