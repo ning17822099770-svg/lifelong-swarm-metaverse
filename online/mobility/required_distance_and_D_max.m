@@ -43,7 +43,8 @@ for j = 1:size(matching_indices,2)
     final_rate = data_unit *  D_max(1,target_server);
 
     % Calculate the result of the formula
-    required_distance = sqrt((P * G) / ((2^(final_rate/B) - 1) * noise_power * B * yita0)) * (c / (4 * pi * carrier_f));
+    % Eq. (4); the path-loss factor 10^(yita0/20) matches transmission_rate.m
+    required_distance = sqrt((P * G) / ((2^(final_rate/B) - 1) * noise_power * B * 10^(yita0 / 20))) * (c / (4 * pi * carrier_f));
 
     % % Display the result
     % fprintf('Computed distance = %.4f\n', distance);

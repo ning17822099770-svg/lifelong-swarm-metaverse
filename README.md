@@ -8,8 +8,16 @@ MATLAB simulation code for the paper
 
 A UAV swarm serves a dynamic Metaverse. A **central collection UAV** collects tasks from several
 semantic environments, and **UAV edge servers** compute them. The environments differ in task
-arrival rate, number of tasks, throughput and latency requirements. The repository implements the
-three algorithms of the paper and their integration:
+arrival rate, number of tasks, throughput and latency requirements.
+
+<p align="center">
+  <img src="docs/figures/fig01_system_model.png" width="900" alt="Lifelong UAV swarm Metaverse architecture"><br>
+  <em>Fig. 1: lifelong UAV-swarm Metaverse architecture. (1) The central UAV collects tasks into its
+  collection queue, trains the lifelong-learning knowledge base L, and sends tasks and policies to
+  the edge UAVs. (2) The edge UAVs follow the central UAV and compute the tasks. (3) Legend.</em>
+</p>
+
+The repository implements the three algorithms of the paper and their integration:
 
 | Sub-problem | Algorithm | Main code |
 |---|---|---|
@@ -18,11 +26,64 @@ three algorithms of the paper and their integration:
 | Computing resource allocation on each server (P3) | **LL-CJTPA**: lifelong learning (PG-ELLA) with an NAC base learner (Alg. 3) | [`training/`](training/) + [`online/learning/updatePGELLA.m`](online/learning/updatePGELLA.m) |
 | Joint system | **PSO-LDF-LL** (Alg. 4) | [`online/run_online_lifelong.m`](online/run_online_lifelong.m) |
 
+### Workflow of the swarm
+
 <p align="center">
-  <img src="docs/figures/training_penalty.png" width="480" alt="Training penalty of LL vs. base learner (Fig. 8a)"><br>
-  <em>Fig. 8(a): when the semantic environment changes (every 300 episodes), the lifelong learner
-  reaches the exhaustive-search optimum much faster than the NAC base learner.</em>
+  <img src="docs/figures/fig02_workflow.png" width="760" alt="Workflow of the UAV swarm"><br>
+  <em>Fig. 2: workflow. Steps 1, 2 and 7 run once per hovering position τ (outer loop); steps 3–6
+  run at every time step t while the swarm hovers (inner loop).</em>
 </p>
+
+| Step | What happens | Code |
+|---|---|---|
+| 1 | The collection UAV moves and collects tasks | `moveInSquareMap`, `task_generation` |
+| 2 | UAV servers re-position to meet their throughput requirement (PSO-CEMA) | `PSO_update_location` |
+| 3 | Tasks are offloaded to servers of the matching type (LDF-DPTAA) | `lyapunov_task_allocation`, `processQueues` |
+| 4–5 | Policies θ = L·s are generated from the knowledge base and sent to the servers | `run_online_lifelong` |
+| 6 | Servers compute tasks and report their queues | `Trajectory_process`, `next_state` |
+| 7 | The collection UAV updates its knowledge base L | `ENAC`, `computeHessianArray`, `updatePGELLA` |
+
+## Results
+
+Figures from the paper. They were produced with the [`paper-version`](https://github.com/ning17822099770-svg/lifelong-swarm-metaverse/tree/paper-version)
+code (see [Code versions](#code-versions)). [`docs/paper_to_code.md`](docs/paper_to_code.md)
+lists the script behind each figure.
+
+**Mobility (PSO-CEMA)**: the UAV servers first approach the collection UAV, then follow it at
+the distance required by their throughput.
+
+| Fig. 3: initial approach phase | Fig. 4: steady following phase | Fig. 5: mobility reward, PSO vs. exhaustive search |
+|---|---|---|
+| <img src="docs/figures/fig03_initial_approach.png" width="300"> | <img src="docs/figures/fig04_steady_following.png" width="300"> | <img src="docs/figures/fig05_mobility_reward.png" width="300"> |
+
+**Task allocation (LDF-DPTAA)**: mobility optimisation and LL both increase the allocation reward,
+and the DP allocation outperforms the earlier Q-learning allocation.
+
+| Fig. 6: allocation reward per server type | Fig. 7: Q-learning vs. DP, with/without mobility |
+|---|---|
+| <img src="docs/figures/fig06_allocation_reward_per_type.png" width="380"> | <img src="docs/figures/fig07_allocation_q_vs_dp.png" width="380"> |
+
+**Training in the central UAV**: the environment changes every 300 episodes (E1–E5). Lifelong
+learning reaches the exhaustive-search optimum faster than the NAC base learner and meets the
+latency requirement sooner.
+
+| Fig. 8(a): penalty | Fig. 8(b): task lifespan | Fig. 8(c): scaled energy cost |
+|---|---|---|
+| <img src="docs/figures/fig08a_training_penalty.png" width="300"> | <img src="docs/figures/fig08b_training_lifespan.png" width="300"> | <img src="docs/figures/fig08c_training_energy.png" width="300"> |
+
+**Online phase on the UAV servers**: policies from the knowledge base give a lower penalty, a
+shorter task lifespan (below the required delay) and shorter queues than the base learner.
+
+| Fig. 9: penalty | Fig. 10: task lifespan | Fig. 11: queue length | Fig. 12: scaled energy cost |
+|---|---|---|---|
+| <img src="docs/figures/fig09_online_penalty.png" width="220"> | <img src="docs/figures/fig10_online_lifespan.png" width="220"> | <img src="docs/figures/fig11_online_queue_length.png" width="220"> | <img src="docs/figures/fig12_online_energy.png" width="220"> |
+
+**Impact of the buffer margin ζ (Eq. 3)**: a larger ζ raises the allocation reward but also the
+computing penalty, especially in the low-load environments 1 and 4.
+
+| Fig. 13(a): allocation reward | Fig. 13(b): computing penalty, LL | Fig. 13(c): computing penalty, base learner |
+|---|---|---|
+| <img src="docs/figures/fig13a_zeta_allocation_reward.png" width="300"> | <img src="docs/figures/fig13b_zeta_penalty_LL.png" width="300"> | <img src="docs/figures/fig13c_zeta_penalty_base.png" width="300"> |
 
 ## Repository structure
 
@@ -129,11 +190,19 @@ saves the base-learner results of the first one. Run them in the order given abo
 
 - The tag [`paper-version`](https://github.com/ning17822099770-svg/lifelong-swarm-metaverse/tree/paper-version) is the exact code used for the published
   results. The files in `data/` were produced with it.
-- `main` contains these later corrections, so new runs can differ slightly from the paper:
+- `main` contains these later corrections to the communication model, so new runs differ from
+  the paper (they have not yet been re-run):
+  - `transmission_rate.m` now uses the bandwidth B and power P of each server type (Table II).
+    The paper version overwrote them with B = 1 MHz and P = 0.1 W, so every type had the rate of
+    type 1, and the rates of types 2–5 were underestimated by a factor of B_k / 1 MHz (4, 3, 2, 5).
   - LDF-DPTAA (`lyapunov_task_allocation.m`, `fair_task_allocation.m`) now uses the transmission
-    rate of the server being allocated (`rate(matching_indices(i))`) instead of `rate(i)`.
-  - The mobility reward (`calculate_reward_PSO.m`) uses the channel gain G = 10, the same
-    value as the rate model, instead of G = 1.
+    rate of the server being allocated (`rate(matching_indices(i))`) instead of `rate(i)`, which
+    was the rate of a server of another type.
+  - The mobility reward (`calculate_reward_PSO.m`) uses the channel gain G = 10, the same value as
+    the rate model, instead of G = 1. Together with the first fix, `calculate_slope` now evaluates
+    the slope of Eq. (9) at the true distance between the UAVs.
+  - The required distance of Eq. (4) (`required_distance_and_D_max.m`) uses the same path-loss
+    factor 10^(η₀/20) as the rate model, so the rate at d_req equals the required rate exactly.
 
 ## Key simulation parameters
 

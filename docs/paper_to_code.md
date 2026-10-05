@@ -8,7 +8,7 @@ Equation, algorithm and figure numbers refer to the IEEE IoT-J paper
 | Paper | Description | Code |
 |---|---|---|
 | Table II | Semantic environments: m_k, s_k, λ_k, B, P, η, Δ | `online/environment/task_generation.m`, `online/environment/server_generation.m`, `online/environment/Task_description.m` (training: `training/environment/*`) |
-| Eqs. (1)–(2) | A2A free-space path loss and transmission rate | `online/mobility/transmission_rate.m` |
+| Eqs. (1)–(2) | A2A free-space path loss and transmission rate | `online/mobility/transmission_rate.m` (per-type B and P from `server_info` columns 7 and 4; G = 10) |
 | Eq. (3) | Rate requirement with buffer margin ζ | `online/mobility/required_distance_and_D_max.m` (`D_max = ceil(#tasks/#servers) + zeta`) |
 | Eq. (4) | Maximum distance that meets the rate requirement | `online/mobility/required_distance_and_D_max.m` |
 | Eq. (5) | Computing energy α(η ε)³ | `online/mdp/reward_function.m` |
@@ -48,6 +48,8 @@ Equation, algorithm and figure numbers refer to the IEEE IoT-J paper
 | Alg. 4 | PSO-LDF-LL integration | `online/run_online_lifelong.m` |
 
 ## Figures
+
+The published figures are stored in [`figures/`](figures/) (`figNN_*.png`, numbered as in the paper).
 
 | Figure | Content | Produced by | Shipped data |
 |---|---|---|---|

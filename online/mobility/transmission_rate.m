@@ -2,6 +2,8 @@ function rate = transmission_rate(distance, B, P)
 %TRANSMISSION_RATE  A2A transmission rate between the collection UAV and a UAV server.
 %
 %   Free-space path loss (Eq. (1)) and Shannon rate (Eq. (2)) at carrier 2.5 GHz.
+%   B (Hz) and P (W) are the bandwidth and transmit power of the server type (Table II),
+%   i.e. columns 7 and 4 of SERVER_INFO.
 
 collecting_channel_param = containers.Map({'suburban', 'urban', 'dense-urban', 'high-rise-urban'}, ...
     {[4.88, 0.43, 0.1, 21], [9.61, 0.16, 1, 20], [12.08, 0.11, 1.6, 23], [27.23, 0.08, 2.3, 34]});
@@ -15,8 +17,6 @@ carrier_f = 2.5e9;
 noise_power = 1e-13;
 
 G = 10;
-B = 1e6;
-P = 0.1;
 
 if distance ~= 0 && distance ~= -1
 
