@@ -12,7 +12,7 @@ for i = 1:n
 
     tasks = ceil(current_total_number / 5);
 
-    loss_min = loss_min + getreward(matching_indices(i), rate(i), tasks, H, Q, server_info, data_unit);
+    loss_min = loss_min + getreward(matching_indices(i), rate(matching_indices(i)), tasks, H, Q, server_info, data_unit);
 
     D_opt(i) = tasks;
 

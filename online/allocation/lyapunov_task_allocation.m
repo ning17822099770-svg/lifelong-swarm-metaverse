@@ -36,7 +36,7 @@ function loss = calculate_individual_loss(i, matching_indices, tasks, rate, H, Q
     % Calculate the loss when a specific number of tasks is allocated to a given server
     % Implementation here depends on the specific loss calculation method
     loss = 0; % Example implementation, actual implementation may differ
-    loss = loss + getreward(matching_indices(i), rate(i), tasks, H, Q, server_info, data_unit);
+    loss = loss + getreward(matching_indices(i), rate(matching_indices(i)), tasks, H, Q, server_info, data_unit);
 end
 
 function D_opt = reconstruct_solution(DP, num_of_servers, current_total_number, D_max, matching_indices, rate, H, Q, server_info, data_unit)

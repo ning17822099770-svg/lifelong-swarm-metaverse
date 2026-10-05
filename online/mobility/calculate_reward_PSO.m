@@ -22,7 +22,7 @@ new_position = [position.x, position.y];
 
 % beta = 0.2;
 
-G = 1;
+G = 10; % channel gain, same value as in transmission_rate.m
 c = 3e8;
 
 type = server_info(server_id, 1);

@@ -14,7 +14,7 @@ yita1 = collecting_params(4);
 carrier_f = 2.5e9; % Carrier frequency
 noise_power = 1e-13; % Noise power
 
-G = 1; % Gain
+G = 10; % channel gain, same value as in transmission_rate.m
 distance_values = 50:1:100; % Distance values from 100 to 200 meters
 
 % Define different B and P values

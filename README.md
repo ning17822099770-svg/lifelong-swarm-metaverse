@@ -125,6 +125,16 @@ The experiment scripts are MATLAB *scripts* that share state through the base wo
 example, `run_online_base_learner` ends with `run('run_online_lifelong.m')`, and the LL script
 saves the base-learner results of the first one. Run them in the order given above.
 
+## Code versions
+
+- The tag [`paper-version`](https://github.com/ning17822099770-svg/lifelong-swarm-metaverse/tree/paper-version) is the exact code used for the published
+  results. The files in `data/` were produced with it.
+- `main` contains these later corrections, so new runs can differ slightly from the paper:
+  - LDF-DPTAA (`lyapunov_task_allocation.m`, `fair_task_allocation.m`) now uses the transmission
+    rate of the server being allocated (`rate(matching_indices(i))`) instead of `rate(i)`.
+  - The mobility reward (`calculate_reward_PSO.m`) uses the channel gain G = 10, the same
+    value as the rate model, instead of G = 1.
+
 ## Key simulation parameters
 
 | Parameter | Value | Where |
@@ -133,6 +143,7 @@ saves the base-learner results of the first one. Run them in the order given abo
 | UAV servers / types | 25 / 5 | `online/run_online_*.m` |
 | Hovering positions N_e / time steps per position T | 100 / 50 | `online/run_online_*.m` |
 | Buffer margin ζ | 5 | `online/run_online_*.m` |
+| Carrier frequency / channel gain G / noise PSD | 2.5 GHz / 10 / 1e-13 | `online/mobility/transmission_rate.m` |
 | PSO: particles / iterations / w / w_damp / c1, c2 | 50 / 100 / 1 / 0.98 / 1.5 | `online/mobility/PSO_update_location.m` |
 | Lyapunov trade-off V | 5000 | `online/allocation/getreward.m` |
 | Training episodes / environment switch | 6000 / every 300 | `training/run_training_*.m` |
