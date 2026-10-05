@@ -13,7 +13,7 @@ results_dir = fullfile(repo_root(), 'data', 'results', 'zeta_sweep');
 clear avgValuesLL;
 clear avgValuesBase;
 
-n = 25;
+n = 30;  % zeta = 0..30 as in Fig. 13 of the paper
 
 for zeta = 0:n
     filenameBase = fullfile(results_dir, sprintf('loss_for_allocation_base_%d.mat', zeta));
@@ -26,8 +26,10 @@ for zeta = 0:n
         disp(['Field name: ', fieldName{1}]); % Display field name
         if ~isempty(fieldName)
             data = loadedData.(fieldName{1});
-            data([1, 51]) = []; % Remove specific data points
-            avgValuesBase(zeta + 1) = -mean(data);
+            % Drop the initialisation rounds tau = 1, 51, ... (the swarm is re-initialised every
+            % 50 positions, when the collection UAV turns around), whole rows of the tau-by-t matrix
+            data(1:50:size(data, 1), :) = [];
+            avgValuesBase(zeta + 1) = -mean(data(:));
         else
             disp(['No data in ', filenameBase]);
         end
@@ -42,8 +44,10 @@ for zeta = 0:n
         disp(['Field name: ', fieldName{1}]);
         if ~isempty(fieldName)
             data = loadedData.(fieldName{1});
-            data([1, 51]) = []; % Same as above
-            avgValuesLL(zeta + 1) = -mean(data);
+            % Drop the initialisation rounds tau = 1, 51, ... (the swarm is re-initialised every
+            % 50 positions, when the collection UAV turns around), whole rows of the tau-by-t matrix
+            data(1:50:size(data, 1), :) = [];
+            avgValuesLL(zeta + 1) = -mean(data(:));
         else
             disp(['No data in ', filenameLL]);
         end
@@ -67,9 +71,9 @@ plot(zetaValuesNumeric, avgValuesLL, '-x', 'DisplayName', 'LL');
 legend('show');
 
 % Adding title and axis labels
-title('Loss for Allocation vs Zeta for Base and LL');
-xlabel('Zeta');
-ylabel('Average Loss');
+title('Change of Reward for Base and LL');
+xlabel('\zeta');
+ylabel('Average Reward');
 
 % Displaying grid
 grid on;

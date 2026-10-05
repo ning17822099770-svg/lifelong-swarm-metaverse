@@ -101,6 +101,10 @@ for Trajectory_id = 1:num_of_trajectory_total
 
         [collection_UAV_location, direction] = moveInSquareMap(collection_UAV_location, map, v_col, direction);
 
+
+        % Rates at the initial positions, so task allocation does not see a zero rate
+        rate = current_rates(server_info, collection_UAV_location);
+
     else
         server_info = server_info_previous;
 

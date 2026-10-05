@@ -99,6 +99,10 @@ for Trajectory_id = 1:num_of_trajectory_total
     
         server_info = server_generation(num_of_servers, collection_UAV_location, types);
 
+
+        % Rates at the initial positions, so task allocation does not see a zero rate
+        rate = current_rates(server_info, collection_UAV_location);
+
     else 
         server_info = server_info_previous;
 

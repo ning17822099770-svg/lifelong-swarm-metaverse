@@ -59,7 +59,8 @@ The published figures are stored in [`figures/`](figures/) (`figNN_*.png`, numbe
 | Fig. 7 | Total task-allocation reward, with/without mobility | `plotting/plot_task_allocation_mobility.m` | `data/results/main_runs` |
 | Fig. 8 | Training: penalty, lifespan, energy | `training/run_training_lifelong.m` → `training/plot_training_results.m` | — |
 | Figs. 9–12 | Online: penalty, lifespan, queue length, energy | `online/compare_online_results.m` | `data/results/main_runs` |
-| Fig. 13 | Impact of ζ | `online/sweep_zeta.m` + `plotting/plot_zeta_*.m` | `data/results/zeta_sweep*` |
+| Fig. 13(a) | Allocation reward vs. ζ | `online/sweep_zeta.m` → `plotting/plot_zeta_allocation_reward.m` | `data/results/zeta_sweep` (comparable run, see `data/README.md`) |
+| Fig. 13(b)–(c) | Computing penalty vs. ζ, LL and base learner | `online/sweep_zeta.m` → `plotting/plot_zeta_penalty_trend.m` | `data/results/zeta_sweep` (comparable run) |
 
 The Q-learning comparison in Fig. 7 comes from the authors' earlier work (IEEE ref. 10316024) and is
 not part of this repository.

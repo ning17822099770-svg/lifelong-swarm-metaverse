@@ -30,10 +30,12 @@ for i = 1:length(dataNames)
     data = loadedData.(fieldName{1});
 
     % Remove the 1st and 51st data points
-    data([1, 51]) = [];
+    % Drop the initialisation rounds tau = 1, 51, ... (the swarm is re-initialised every
+    % 50 positions, when the collection UAV turns around), whole rows of the tau-by-t matrix
+    data(1:50:size(data, 1), :) = [];
 
     % Calculate the mean
-    avgValues(i) = mean(data);
+    avgValues(i) = mean(data(:));
 end
 
 zetaValues = ['With Mobility Model', 'Without Mobility Model'];

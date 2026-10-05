@@ -142,8 +142,9 @@ All commands are run from the repository root in MATLAB.
 ```matlab
 setup_paths('online');
 plot_task_allocation_mobility   % impact of the mobility model on task allocation (Fig. 7)
-plot_zeta_allocation_reward     % task-allocation reward vs. zeta (Fig. 13a)
-plot_zeta_penalty_per_env       % computing penalty vs. zeta per environment (Fig. 13b-c)
+plot_zeta_allocation_reward     % task-allocation reward vs. zeta, 0..30 (Fig. 13a)
+plot_zeta_penalty_trend         % computing penalty vs. zeta for LL and base learner (Fig. 13b-c)
+plot_zeta_penalty_per_env       % bar charts per environment, incl. the equal-split baseline
 ```
 
 ### 2. Training phase in the central collection UAV (Fig. 8)
@@ -203,6 +204,12 @@ saves the base-learner results of the first one. Run them in the order given abo
     the slope of Eq. (9) at the true distance between the UAVs.
   - The required distance of Eq. (4) (`required_distance_and_D_max.m`) uses the same path-loss
     factor 10^(η₀/20) as the rate model, so the rate at d_req equals the required rate exactly.
+  - When the swarm is re-initialised (τ = 1, 51, …), the rates are computed from the initial
+    server positions (`current_rates.m`). The paper version left them at zero, so LDF-DPTAA
+    used a differently scaled reward in those rounds.
+  - The plotting scripts drop the initialisation rounds as whole rows of the τ × t matrix
+    (`data(1:50:end, :) = []`). The paper version used `data([1, 51]) = []`, which removed only
+    two single elements. Figs. 13(a)–(c) are plotted for ζ = 0–30 as in the paper.
 
 ## Key simulation parameters
 

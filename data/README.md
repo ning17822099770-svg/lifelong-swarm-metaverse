@@ -34,3 +34,10 @@ Two kinds of files, one per method (`base` = NAC base learner, `LL` = lifelong l
 | `main_runs/` | Full runs with ζ = 5 and the no-mobility ablation | `plotting/plot_task_allocation_mobility.m` (Fig. 7), Figs. 9–12 |
 | `zeta_sweep/` | Short runs for every ζ in 0…50, plus `fair`/`nopso` | `plotting/plot_zeta_allocation_reward.m`, `plotting/plot_zeta_penalty_trend.m` |
 | `zeta_sweep_full/` | Full runs for ζ ∈ {0, 5, …, 25} and `fair` | `plotting/plot_zeta_penalty_per_env.m` |
+
+The `zeta_sweep/` runs (25 positions τ × 25 time steps per ζ) are a run of the same experiment
+as Fig. 13, not the exact one behind the published curves. The computing penalties of
+Fig. 13(b)–(c) are close (e.g. LL at ζ = 0: 0.17 / 0.75 / 1.00 / 0.75 / 0.30 for environments 1–5,
+versus about 0.18 / 0.76 / 0.99 / 0.82 / 0.40 in the paper). The task-allocation reward of
+Fig. 13(a) is about 3× lower than in the paper (LL ≈ 1.3–1.6 × 10⁴ instead of ≈ 4.8–5 × 10⁴),
+so it should be compared only in its trend.
